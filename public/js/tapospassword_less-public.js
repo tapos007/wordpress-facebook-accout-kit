@@ -5,7 +5,7 @@ AccountKit_OnInteractive = function(){
             state:randomString(20),
             version:"v1.0",
             fbAppEventsEnabled:true,
-            redirect:"http://my-wp.dev/"
+            redirect:"http://my-wp.dev/wp-admin/admin-ajax.php?action=tutexpFacebookDataFetch1"
         }
     );
 };
@@ -21,13 +21,30 @@ function randomString(length) {
 
 
 
-
+    var mobileNumber = null;
+    var countryCode = null;
     // login callback
     function loginCallback(response) {
-        console.log(response);
+
         if (response.status === "PARTIALLY_AUTHENTICATED") {
             var code = response.code;
             var csrf = response.state;
+            jQuery.ajax({
+                url : tutexp_ajax.ajax_url,
+                type : 'post',
+                data : {
+                    'action' : 'tutexpFacebookDataFetch',
+                    'code' : code,
+                    'csrf' : csrf,
+                    'countryCode':countryCode,
+                    'mobileNumber':mobileNumber
+                },
+                success : function( response ) {
+                    console.log(response);
+                   var  str = response.substring(0, response.length - 1);
+                    window.location = str;
+                }
+            });
 
             // Send code to server to exchange for access token
         }
@@ -41,7 +58,7 @@ function randomString(length) {
 
     // phone form submission handler
     function smsLogin(countryCode,phoneNumber) {
-        debugger;
+       // debugger;
         AccountKit.login(
             'PHONE',
             {countryCode: countryCode, phoneNumber: phoneNumber}, // will use default values if not specified
@@ -134,9 +151,12 @@ function randomString(length) {
     });
 
     $('.smsLogin').on('click',function (e) {
-        alert("ca");
+
+        countryCode = $("#country").val();
+        mobileNumber = $("#phone").val();
+
         e.preventDefault();
-        smsLogin("+880","1671592197");
+        smsLogin(countryCode,mobileNumber);
     });
 
     $('.emailLogin').on('click',function (e) {

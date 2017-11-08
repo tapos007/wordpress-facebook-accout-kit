@@ -97,5 +97,59 @@ class Tapospassword_less_ShortCode
         }
 
         add_shortcode('tutexp_form', 'tutexp_form_creation');
+
+        $this->ajaxCallInfo();
+    }
+
+    public function ajaxCallInfo()
+    {
+        function tutexpFacebookDataFetch(){
+            $code = $_POST['code'];
+            $csrf = $_POST['csrf'];
+            $countryCode = $_POST['countryCode'];
+            $mobileNumber = $_POST['mobileNumber'];
+            $version = "v1.0";
+            $app_id = "1952653494947783";
+            $secret = "a1d4c2479d99e1649fa762e194c4423a";
+
+            $token_exchange_url = 'https://graph.accountkit.com/'.$version.'/access_token?'.
+                'grant_type=authorization_code'.
+                '&code='.$code.
+                "&access_token=AA|$app_id|$secret";
+
+            $response = wp_remote_get( $token_exchange_url);
+            $website = "http://example.com";
+            $userdata = array(
+                'user_login'  =>  'login_name1234',
+                'user_url'    =>  $website,
+                'user_pass'   =>  NULL  // When creating an user, `user_pass` is expected.
+            );
+            $user_id = wp_insert_user( $userdata ) ;
+            $metas = array(
+                'access_token'   => $response['access_token'],
+                'fb_id' => $response['id'],
+                'token_refresh_time'  => $response['token_refresh_interval_sec']
+            );
+
+            foreach($metas as $key => $value) {
+                update_user_meta( $user_id, $key, $value );
+            }
+
+            wp_set_auth_cookie( $user_id);
+            echo esc_url(admin_url().'profile.php');
+
+        }
+
+        function tutexpFacebookDataFetch1(){
+            echo "come this location";
+        }
+        add_action( 'wp_ajax_tutexpFacebookDataFetch', 'tutexpFacebookDataFetch');
+        add_action( 'wp_ajax_nopriv_tutexpFacebookDataFetch', 'tutexpFacebookDataFetch');
+
+        add_action( 'wp_ajax_tutexpFacebookDataFetch1', 'tutexpFacebookDataFetch1');
+        add_action( 'wp_ajax_nopriv_tutexpFacebookDataFetch1', 'tutexpFacebookDataFetch1');
+
+
+
     }
 }

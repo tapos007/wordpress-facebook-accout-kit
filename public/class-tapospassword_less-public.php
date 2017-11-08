@@ -96,8 +96,10 @@ class Tapospassword_less_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, 'https://sdk.accountkit.com/en_US/sdk.js', array( 'jquery' ), $this->version, true );
-		wp_enqueue_script( $this->plugin_name ."1", plugin_dir_url( __FILE__ ) . 'js/tapospassword_less-public.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'tutexp_fb_account_kit', plugin_dir_url( __FILE__ ) . 'js/tapospassword_less-public.js' );
+        wp_localize_script( 'tutexp_fb_account_kit', 'tutexp_ajax', array( 'ajax_url' => admin_url('admin-ajax.php')) );
+        wp_enqueue_script( $this->plugin_name, 'https://sdk.accountkit.com/en_US/sdk.js', array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( 'tutexp_fb_account_kit',null , array( 'jquery' ), $this->version, true );
 
 	}
 
