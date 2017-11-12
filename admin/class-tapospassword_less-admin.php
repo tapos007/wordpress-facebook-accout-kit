@@ -51,6 +51,7 @@ class Tapospassword_less_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->includeReduxAdmin();
 
 	}
 
@@ -99,5 +100,11 @@ class Tapospassword_less_Admin {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tapospassword_less-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
+
+    private function includeReduxAdmin()
+    {
+
+
+    }
 
 }

@@ -69,10 +69,20 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-tapospassword_less-shortco
  *
  * @since    1.0.0
  */
+if ( !class_exists( 'ReduxFramework' ) && file_exists( dirname( __FILE__ ) . '/ReduxFramework/ReduxCore/framework.php' ) ) {
+    require_once( dirname( __FILE__ ) . '/ReduxFramework/ReduxCore/framework.php' );
+}
+if ( !isset( $redux_demo ) && file_exists( dirname( __FILE__ ) . '/ReduxFramework/sample/sample-config.php' ) ) {
+    echo "hell";
+    require_once( dirname( __FILE__ ) . '/ReduxFramework/sample/sample-config.php' );
+}
 function run_tapospassword_less() {
+
+
 
 	$plugin = new Tapospassword_less();
 	$plugin->run();
+    $admin = new Tapospassword_less_Admin($plugin->get_plugin_name(),$plugin->get_version());
 
 	$shortCode = new Tapospassword_less_ShortCode();
 	$shortCode->formDisplayShortCode();
